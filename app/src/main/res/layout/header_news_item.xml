@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/header_news_item_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/s1"/>
+    <TextView
+        android:id="@+id/header_news_item_txt"
+        android:padding="5dp"
+        android:background="#a2000000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="#fff"
+        android:gravity="center_horizontal"
+        android:layout_alignBottom="@+id/header_news_item_img"
+        android:text="在理想与现实之间，找到了平衡音色的能力 —记东方之声ES1000耳机放大器试听"/>
+</RelativeLayout>

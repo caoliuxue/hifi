@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="devide_line">#CBCED2</color>
+    <color name="textBarTitle">#e6c9bd</color>
+    <color name="textDarkBrownTitle">#381203</color>
+    <color name="red">#FF0000</color>
+    <color name="titleBarBackgroud">#673c25</color>
+    <color name="titleBarBPressed">#452819</color>
+</resources>

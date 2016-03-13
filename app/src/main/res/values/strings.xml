@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HIFI之家</string>
+    <string name="label_index">首页</string>
+    <string name="label_back">返回</string>
+</resources>
