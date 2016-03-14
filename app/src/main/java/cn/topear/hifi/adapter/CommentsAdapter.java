@@ -45,8 +45,8 @@ public class CommentsAdapter extends BaseAdapter {
         }
 //        Picasso.with(mContext).load(HiFiRestClient.BASE_URL + commentItemBean.getMainpicture()).into(holder.avatarImage);
         holder.replier.setText(commentItemBean.getReplyorcommentusername());
-        holder.replyTime.setText(commentItemBean.getReplyorcommentusername());
-        holder.replyCcontent.setText(commentItemBean.getReplyorcommentusername());
+        holder.replyTime.setText(commentItemBean.getPosttime());
+        holder.replyCcontent.setText(commentItemBean.getCommentcontent());
         return convertView;
     }
 
