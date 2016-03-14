@@ -1,0 +1,12 @@
+    {
+        "commentcontent": "昵称？",
+        "commentid": "20151026002103",
+        "goodsid": "2015041300122",
+        "goodsname": "手机扬声器HiFi之路为何这么难",
+        "likeCount": 0,
+        "posttime": "2015-10-26 09:41:38",
+        "replyid": "",
+        "replyorcommentuserid": "201510200050",
+        "replyorcommentusername": "67168653@qq.com",
+        "source": 0
+    },

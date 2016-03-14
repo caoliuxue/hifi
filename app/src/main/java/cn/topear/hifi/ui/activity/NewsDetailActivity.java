@@ -4,43 +4,55 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.topear.hifi.R;
+import cn.topear.hifi.adapter.CommentsAdapter;
 import cn.topear.hifi.bean.CommentItemBean;
 import cn.topear.hifi.bean.NewsDetailBean;
 import cn.topear.hifi.http.Constant;
 import cn.topear.hifi.http.HiFiRestClient;
-import cn.topear.hifi.util.Json2Bean;
 import cz.msebera.android.httpclient.Header;
 
 /**
  * News detail
  * Created by clx-zj on 2016/3/13.
  */
-public class NewsDetailActivity extends FragmentActivity implements Constant, View.OnClickListener {
+public class NewsDetailActivity extends FragmentActivity implements Constant {
     private static final String LOG_TAG = "NewsDetailActivity";
 
-    private TextView contentTitleTextView, titleBarBack;
-    private WebView contentWebview;
+
+    @Bind(R.id.comments)
+    ListView comments;
+    @Bind(R.id.content_title)
+    TextView contentTitleTextView;
+    @Bind(R.id.contents)
+    WebView contentWebView;
+
     private String articleId;
     private Context mContext;
+
+    private CommentsAdapter commentsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_news_detail);
+        ButterKnife.bind(this);
         initView();
         super.onCreate(savedInstanceState);
     }
@@ -48,13 +60,10 @@ public class NewsDetailActivity extends FragmentActivity implements Constant, Vi
     void initView() {
         mContext = this;
         articleId = getIntent().getExtras().getString(INTENT_EXTRA.ARTICLEID);
-        titleBarBack = (TextView) findViewById(R.id.title_bar_back);
-        contentTitleTextView = (TextView) findViewById(R.id.content_title);
-        contentWebview = (WebView) findViewById(R.id.contents);
-        contentWebview.getSettings().setDefaultTextEncodingName("UTF -8");
+        contentWebView.getSettings().setDefaultTextEncodingName("UTF-8");
+        comments.setAdapter(commentsAdapter=new CommentsAdapter(this));
         loadNewsDetailByArticleId();
         loadComments();
-        titleBarBack.setOnClickListener(this);
     }
 
     void loadNewsDetailByArticleId() {
@@ -75,8 +84,7 @@ public class NewsDetailActivity extends FragmentActivity implements Constant, Vi
                     String contentValue = newsDetailBean.getContentvalue();
                     contentValue = "<img src=\"" + HiFiRestClient.BASE_URL + newsDetailBean.getMainpicture() + "\" alt=\"\" border=\"0\" /></p>" + contentValue;
                     contentValue = contentValue.replace("<img", "<img style=\"width:100%;height:auto\"");
-                    contentWebview.loadData(contentValue, "text/html;charset=UTF-8", null);
-//                    System.out.println(newsDetailBean.getContentvalue());
+                    contentWebView.loadData(contentValue, "text/html;charset=UTF-8", null);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -101,34 +109,41 @@ public class NewsDetailActivity extends FragmentActivity implements Constant, Vi
                 Log.i(LOG_TAG, "loadComments" + response);
                 try {
                     JSONArray page = response.getJSONObject("response").getJSONObject("page").getJSONArray("result");
-                    List<CommentItemBean> commentItemBeans = Json2Bean.getCommentFromJson(page.toString());
+                    List<CommentItemBean> commentItemBeans = new ArrayList<>();
+                    if (page.length() > 0) {
+                        for (int i = 0; i < page.length(); i++) {
+                            JSONObject comment = page.getJSONObject(i);
+                            CommentItemBean commentItemBean = new CommentItemBean();
+                            commentItemBean.setCommentcontent(comment.getString("commentcontent"));
+                            commentItemBean.setCommentid(comment.getString("commentid"));
+                            commentItemBean.setGoodsid(comment.getString("goodsid"));
+                            commentItemBean.setGoodsname(comment.getString("goodsname"));
+                            commentItemBean.setLikeCount(comment.getString("likeCount"));
+                            commentItemBean.setPosttime(comment.getString("posttime"));
+                            commentItemBean.setReplyid(comment.getString("replyid"));
+                            commentItemBean.setReplyorcommentuserid(comment.getString("replyorcommentuserid"));
+                            commentItemBean.setReplyorcommentusername(comment.getString("replyorcommentusername"));
+                            commentItemBean.setSource(comment.getString("source"));
+                            commentItemBeans.add(commentItemBean);
+                        }
+                        commentsAdapter.addData(commentItemBeans);
+                    }
                     System.out.println("commentItemBeans.size():" + commentItemBeans.size());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.i(LOG_TAG, "loadComments onFailure" + responseString);
-//                super.onFailure(statusCode, headers, responseString, throwable);
             }
 
         });
     }
 
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.title_bar_back: {
-                finish();
-                break;
-            }
-            default:
-                break;
-        }
+    @OnClick(R.id.title_bar_back) public void finish(){
+        super.finish();
     }
+
 }
